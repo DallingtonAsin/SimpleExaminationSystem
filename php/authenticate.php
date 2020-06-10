@@ -1,7 +1,8 @@
 <?php
 require_once('dbh.inc.php');
+
+
 class AuthenticateUsers{
-  
   
 
 public function doAuthentication(){
@@ -12,23 +13,26 @@ public function doAuthentication(){
   session_start();
    if($_SERVER['REQUEST_METHOD']=="POST"){
   if(isset($_POST['submit'])){
-    $username = $_POST['username'];
-    $password =$_POST['password'];
-    if(empty($username)){
+    
+    if(empty($_POST['username'])){
       array_push($errors, "username is required");
     }
-    if(empty($password)){
+    if(empty($_POST['password'])){
       array_push($errors, "password is required");
     }
+
+    $username = $_POST['username'];
+    $password = $_POST['password'];
     if(count($errors)==0){
         $stmt = $dbConn->doConnect()->prepare("SELECT * FROM students 
-        WHERE StudentName='$username' AND
-        Password='$password'");
+        WHERE StudentName=:name AND
+        Password=:passcode");
+        $stmt->bindParam(':name', $username);
+        $stmt->bindParam(':passcode', $password);
         $stmt->execute();
         $rows =$stmt->fetch(PDO::FETCH_ASSOC);
         if($rows == false){
           array_push($errors, "Invalid username or password,please try again!");
-         // echo $dbConn->errorCode();
         }
         else{   
           $name = $rows['StudentName'];
@@ -46,7 +50,6 @@ public function doAuthentication(){
           header("location:../cstexams/main.php");
         }
        
-    
     } // end of an if block for count(($errors)==0)
     else{
       require('errors.php');
@@ -89,7 +92,7 @@ public function doAutomaticLogout(){
   $c= new AuthenticateUsers();
   if (isset($_SESSION['uniquecode'])) {
   if($c->isLoginSessionExpired()){
-    header("location:../../php/logout.php?session_expired='1'");
+    header("location:../php/logout.php?session_expired='1'");
   }
 }
 }
@@ -105,11 +108,6 @@ function doLogout(){
   header("location:../index.php");
 }
 }
-
-
-
-
-
 
 } // end of class AuthenticateUsers
 
