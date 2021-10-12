@@ -3,9 +3,9 @@ class Database{
 
   // specify your own database credentials
   public $host = "localhost";
-  public $database = "cst_schools";
+  public $database = "doexam";
   public $user = "Dallington";
-  public $pass_word = "3006005";
+  public $pass_word = "Dallington100";
   public $conn;
   public $errors;
 

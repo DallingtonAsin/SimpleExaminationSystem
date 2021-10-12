@@ -47,7 +47,7 @@ public function doAuthentication(){
           $_SESSION['loggedin_time'] = time();
           //$image = getImage($name);
         
-          header("location:../cstexams/main.php");
+          header("location:../main.php");
         }
        
     } // end of an if block for count(($errors)==0)
